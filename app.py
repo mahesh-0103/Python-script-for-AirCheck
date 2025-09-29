@@ -22,7 +22,7 @@ def get_flight_options(origin, destination):
             {"flight_id": "G9-555", "time": "08:00 IST", "fare": 9500, "family": "Saver"},
             {"flight_id": "G9-667", "time": "11:30 IST", "fare": 11200, "family": "Flexi"}
         ]
-    return [] # Return empty list if route not found
+    return []
 
 def get_flight_status(pnr, last_name):
     """Simulates checking a flight status system with more users."""
@@ -37,7 +37,7 @@ def get_flight_status(pnr, last_name):
     if pnr == "GH5IJ6" and last_name == "patel":
         return {"status": "Cancelled", "details": "Flight G9 808 has been cancelled due to operational reasons."}
         
-    return None # PNR not found
+    return None
 
 def calculate_cancellation_fee(pnr, last_name):
     """Simulates the fare rules engine with more scenarios."""
@@ -52,7 +52,7 @@ def calculate_cancellation_fee(pnr, last_name):
     if pnr == "UV2WX3" and last_name == "khan": # Non-refundable
         return {"fee": 8000, "refund": 0, "family": "Non-Refundable"}
         
-    return None # PNR not found
+    return None
 
 
 # --- 3. The Main Webhook (The Agent's "Brain") ---
@@ -64,6 +64,7 @@ def agent_webhook():
     user_input = request_data.get('user_input', '').lower()
     current_session = conversation_sessions.get(session_id, {})
     response_text = ""
+    actions = []
 
     # --- PRIMARY INTENT ROUTER ---
     if not current_session.get("intent"):
@@ -96,12 +97,22 @@ def agent_webhook():
                 current_session["state"] = "awaiting_flight_selection"
             else:
                 response_text = f"I'm sorry, I couldn't find any flights from {current_session['origin']} to {current_session['destination']}. Would you like to try a different route?"
-                current_session["state"] = "awaiting_origin" # Go back to asking for origin
+                current_session["state"] = "awaiting_origin"
             
         elif current_session["state"] == "awaiting_flight_selection":
             current_session["selected_flight"] = user_input.upper()
-            response_text = f"Great, you've selected {current_session['selected_flight']}. Your mock PNR is {session_id[:6].upper()}. A confirmation will be sent to your email. Can I help with anything else?"
-            current_session = {} # Reset session
+            pnr = session_id[:6].upper()
+            response_text = f"Great, you've selected {current_session['selected_flight']}. Your mock PNR is {pnr}. A confirmation has been sent to your email. Can I help with anything else?"
+            
+            # **MODIFIED PART: Add email action**
+            actions.append({
+                "type": "email",
+                "integration_name": "AirCheck_Email_Confirmations",
+                "to": "mock.user@example.com",
+                "subject": f"Your Flight Booking is Confirmed: PNR {pnr}",
+                "body": f"Thank you for booking. Your flight {current_session['selected_flight']} is confirmed. Your PNR is {pnr}."
+            })
+            current_session = {}
 
     # == STATUS FLOW ==
     elif current_session.get("intent") == "check_status":
@@ -114,7 +125,15 @@ def agent_webhook():
             status_info = get_flight_status(current_session["pnr"], current_session["last_name"])
             if status_info:
                 last_updated = datetime.datetime.now().strftime("%H:%M IST on %d %B")
-                response_text = f"I found the booking. {status_info['details']}. Last updated at {last_updated}. Would you like me to send an SMS alert?"
+                response_text = f"I found the booking. {status_info['details']}. Last updated at {last_updated}. I have sent an SMS alert with this update."
+
+                # **MODIFIED PART: Add SMS action**
+                actions.append({
+                    "type": "sms",
+                    "integration_name": "AirCheck_SMS_Alerts",
+                    "to": "+910000000000", # Mock number from your Twilio test account
+                    "message": f"Flight Status Update: {status_info['details']}"
+                })
             else:
                 response_text = "I'm sorry, I couldn't find a booking with that PNR and last name. Please check the details and try again."
             current_session = {}
@@ -137,14 +156,15 @@ def agent_webhook():
                 current_session = {}
         elif current_session["state"] == "awaiting_cancel_confirmation":
             if "yes" in user_input or "proceed" in user_input:
-                response_text = "Your cancellation is confirmed. The refund will be processed to your original payment method. Is there anything else I can assist with?"
+                response_text = "Your cancellation is confirmed. A summary has been sent to your email. The refund will be processed to your original payment method. Is there anything else I can assist with?"
+                # You could add another email action here for cancellation confirmation
             else:
                 response_text = "Okay, I have not cancelled your booking. Can I help with anything else?"
             current_session = {}
 
-    # Save the updated session state
+    # Save the updated session state and return the final JSON
     conversation_sessions[session_id] = current_session
-    return jsonify({"response_text": response_text})
+    return jsonify({"response_text": response_text, "actions": actions})
 
 
 # --- 4. The Runner ---
