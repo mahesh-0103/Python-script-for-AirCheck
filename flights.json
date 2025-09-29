@@ -1,0 +1,51 @@
+{
+  "BLR-DEL": [
+    {
+      "flight_id": "G9-101",
+      "time": "18:40 IST",
+      "duration": "2h 30m",
+      "layovers": 0,
+      "fare": 12450,
+      "family": "Saver",
+      "baggage_allowance": "15kg Checked"
+    },
+    {
+      "flight_id": "G9-203",
+      "time": "19:20 IST",
+      "duration": "2h 35m",
+      "layovers": 0,
+      "fare": 13100,
+      "family": "Flexi",
+      "baggage_allowance": "25kg Checked"
+    },
+    {
+      "flight_id": "G9-310",
+      "time": "14:00 IST",
+      "duration": "4h 15m",
+      "layovers": 1,
+      "fare": 11500,
+      "family": "Saver",
+      "baggage_allowance": "15kg Checked"
+    }
+  ],
+  "BOM-MAA": [
+    {
+      "flight_id": "G9-555",
+      "time": "08:00 IST",
+      "duration": "1h 45m",
+      "layovers": 0,
+      "fare": 9500,
+      "family": "Saver",
+      "baggage_allowance": "15kg Checked"
+    },
+    {
+      "flight_id": "G9-667",
+      "time": "11:30 IST",
+      "duration": "1h 50m",
+      "layovers": 0,
+      "fare": 11200,
+      "family": "Flexi",
+      "baggage_allowance": "25kg Checked"
+    }
+  ]
+}

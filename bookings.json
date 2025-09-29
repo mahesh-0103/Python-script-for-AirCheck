@@ -1,0 +1,47 @@
+{
+  "ZX1AB2": {
+    "last_name": "Sharma",
+    "passengers": [{"first_name": "Anjali", "last_name": "Sharma"}],
+    "flight_id": "G9 102",
+    "departure_timestamp_utc": "2025-10-02T13:10:00Z",
+    "status": "Delayed",
+    "status_details": "Flight G9 102 is delayed by 45 minutes. New departure is 18:40 IST."
+  },
+  "CD3EF4": {
+    "last_name": "Gupta",
+    "passengers": [{"first_name": "Rajesh", "last_name": "Gupta"}],
+    "flight_id": "G9 305",
+    "departure_timestamp_utc": "2025-09-30T15:30:00Z",
+    "status": "On Time",
+    "status_details": "Flight G9 305 is on time for departure at 21:00 IST from Gate 14."
+  },
+  "GH5IJ6": {
+    "last_name": "Patel",
+    "passengers": [{"first_name": "Sunita", "last_name": "Patel"}],
+    "flight_id": "G9 808",
+    "departure_timestamp_utc": "2025-10-05T12:00:00Z",
+    "status": "Cancelled",
+    "status_details": "Flight G9 808 has been cancelled due to operational reasons."
+  },
+  "AB7YZ8": {
+    "last_name": "Verma",
+    "passengers": [
+      {"first_name": "Rohan", "last_name": "Verma"},
+      {"first_name": "Priya", "last_name": "Verma"}
+    ],
+    "flight_id": "G9-415",
+    "departure_timestamp_utc": "2025-10-04T09:00:00Z",
+    "fare_family": "Saver",
+    "total_fare": 24900,
+    "ssr_list": []
+  },
+  "PQ9RS0": {
+    "last_name": "Iyer",
+    "passengers": [{"first_name": "Meena", "last_name": "Iyer"}],
+    "flight_id": "G9-667",
+    "departure_timestamp_utc": "2025-10-01T06:00:00Z",
+    "fare_family": "Flexi",
+    "total_fare": 13100,
+    "ssr_list": ["Wheelchair assistance"]
+  }
+}
